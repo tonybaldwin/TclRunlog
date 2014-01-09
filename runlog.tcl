@@ -10,9 +10,17 @@ package require sqlite3
 global uname
 global units
 global oweight
+global os
+global browser
+
+set os $tcl_platform(os)
 
 bind . <Control-n> {new}
 bind . <Escape> {exit}
+bind . <F8> {preferences}
+
+image  create  photo  tclrunlog -format GIF -file  tclrunlog.gif
+image  create  photo  tricon -format GIF -file  tricon.gif
 
 if { [file exists runlog.db] == 0 } {
 	wm title . "TclRunlog"
@@ -23,7 +31,7 @@ if { [file exists runlog.db] == 0 } {
 	[ttk::button .btns.abort -text "Abort" -command {
 	toplevel .abort1
 	wm title .abort1 "Aborting"
-	grid [tk::message .abort1.msg -width 400 -text "TclRunlog will now exit.\nIf you require assistance, please see the TclRunlog wiki\nhttp://wiki.tonybaldwin.info/doku.php?id=hax:addresstcl\nwhere you can find documentation, or contact the author, Tony."]
+	grid [tk::message .abort1.msg -width 400 -text "TclRunlog will now exit.\nIf you require assistance, please see the TclRunlog wiki\nhttp://tonyb.us/tclrunlog\nwhere you can find documentation, or contact the author, Tony."]
 	grid [ttk::button .abort1.btn -text "Okay" -command {destroy .}]
 
 }]
@@ -34,12 +42,9 @@ sqlite3 db runlog.db
 set uname [ db eval {select value from config where var="name"}]
 set units [ db eval {select value from config where var="units"}]
 set oweight [ db eval {select value from config where var="oweight"}]
+set browser [ db eval {select value from config where var="browser"}]
 
 wm title . "Tcl Runlog"
-
-frame .title 
-grid [ttk::label .title.t -text "Tcl Runlog"]
-pack .title -in . -fill x
 
 frame .menu -relief raised
 
@@ -51,19 +56,27 @@ menu .menu.file.menu -tearoff 0
 .menu.file.menu add command -label "Open Workout" -command {openwk} -accelerator Ctrl-o
 .menu.file.menu add command -label "Monthly Report" -command {month} -accelerator Ctrl-m
 .menu.file.menu add command -label "Yearly Report" -command {year} -accelerator Ctrl-y
-.menu.file.menu add command -label "Preferences" -command {preferences} 
+.menu.file.menu add command -label "Preferences" -command {preferences} -accelerator <F8>
 .menu.file.menu add command -label "Quit" -command {exit} -accelerator Esc
 
 menu .menu.help.menu -tearoff 0
 .menu.help.menu add command -label "About" -command {about}
 .menu.help.menu add command -label "Wiki" -command {wiki}
 
+tk::label .menu.icon -image tricon
+
+frame .img
+grid [ttk::label .img.icon -image tclrunlog]
+
 pack .menu.file -in .menu -side left
+pack .menu.icon -in .menu -side left
 pack .menu.help -in .menu -side right
 pack .menu -in . -fill x
+pack .img -in . -side bottom -fill both
 }
 
 proc new {} {
+	destroy .img
 	frame .new
 	frame .new.date
 
@@ -121,11 +134,13 @@ proc year {} {
 proc preferences {} {
 	toplevel .prefs
 	grid [ttk::label .prefs.ml -text "Units: "]\
-	[ttk::combobox .prefs.units -width 12 -value [list "Metric" "English" ] -state readonly -textvar units]
+	[ttk::combobox .prefs.units -width 13 -value [list "Metric" "English" ] -state readonly -textvar units]
 	grid [ttk::label .prefs.nm -text "Name: "]\
 	[ttk::entry .prefs.name -width 15 -textvar uname]
 	grid [ttk::label .prefs.low -text "Starting weight: "]\
 	[ttk::entry .prefs.eow -width 15 -textvar oweight]
+	grid [ttk::button .prefs.brzr -text "Browser:" -command {setbrowser}]\
+	[ttk::entry .prefs.browz -width 15 -textvar browser]
 	grid [ttk::button .prefs.save -text "Save" -command {saveprefs}]\
 	[ttk::button .prefs.cancel -text "Close" -command {destroy .prefs}]
 }
@@ -135,7 +150,6 @@ proc saveprefs {} {
 		sqlite3 db runlog.db 
 		db eval {delete from config where var="units"}
 		db eval {insert into config values('units','English')}
-		# db1 eval {INSERT INTO t1 VALUES(5,@bigstring)} 
 		db close
 	} else { 
 		sqlite3 db runlog.db 
@@ -149,7 +163,22 @@ proc saveprefs {} {
 	db eval {insert into config values('name',$::uname)}
 	db eval {delete from config where var="oweight"}
 	db eval {insert into config values('oweight',$::oweight)}
+	db eval {delete from config where var="browser"}
+	db eval {insert into config values('browser',$::browser)}
 
+}
+
+proc setbrowser {} {
+	set filetypes " "
+	if { $::os == "Windows NT" } {
+	set ::browser [tk_getOpenFile -filetypes $filetypes -initialdir "C:\\Program Files\\"]
+	} else {
+	if { $::os == "Linux" } {
+	set ::browser [tk_getOpenFile -filetypes $filetypes -initialdir "/usr/bin"]
+	} else {
+	set ::browser [tk_getOpenFile -filetypes $filetypes]
+	}
+	}
 }
 
 proc swout {} {
@@ -163,14 +192,14 @@ proc swout {} {
 proc about {} {
 	toplevel .about 
 	wm title .about "About Tcl Runlog"
-	tk::message .about.t -text "Tcl Runlog\nA runner's workout log management tool by Tony Baldwin- http://wiki.tonybaldwin.info\nThis program is Free Software, released according to the GPL v.3 or later." -width 200 
+	tk::message .about.t -text "Tcl Runlog\nA runner's workout log management tool by Tony Baldwin- http://tonyb.us/tclrunlog\nThis program is Free Software, released according to the GPL v.3 or later." -width 200 
 	tk::button .about.ok -text "Okay" -command {destroy .about}
 	pack .about.t -in .about -side top
 	pack .about.ok -in .about -side top
 }
 
 proc wiki {} {
-	eval exec "\"$::browser\" http://wiki.tonybaldwin.info"
+	eval exec "\"$::browser\" http://tonyb.us/tclrunlog"
 }
 
 # This program was written by tony baldwin - http://wiki.tonybaldwin.info 
