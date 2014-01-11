@@ -12,6 +12,14 @@ global units
 global oweight
 global os
 global browser
+global pace
+global cals
+global dunit
+global pace
+global cals
+
+set cals {}
+set pace {}
 
 set os $tcl_platform(os)
 
@@ -43,6 +51,13 @@ set uname [ db eval {select value from config where var="name"}]
 set units [ db eval {select value from config where var="units"}]
 set oweight [ db eval {select value from config where var="oweight"}]
 set browser [ db eval {select value from config where var="browser"}]
+
+if { $units == "English" } {
+	set dunit "mi"
+	} elseif {
+	$units == "Metric" 
+	} { set dunit "km"
+}
 
 wm title . "Tcl Runlog"
 
@@ -102,7 +117,14 @@ proc new {} {
 	[ttk::label .new.time.lsex -text "seconds: "]\
 	[ttk::entry .new.time.esex -width 5 -textvar sex]
 
-	grid [ttk::label .new.time.note -text "Notes: "]
+	frame .new.calc
+	grid [ttk::button .new.calc.calc -text "Calculate" -command {newcalc}]
+	grid [ttk::label .new.calc.pc -text "Pace: (min/$::dunit): "]\
+	[ttk::entry .new.calc.pace -width 5 -textvar pace]
+	grid [ttk::label .new.calc.clr -text "Calories: "]\
+	[ttk::entry .new.calc.cals -width 5 -textvar cals]
+
+	grid [ttk::label .new.calc.note -text "Notes: "]
 
 	frame .new.note
 	text .new.note.t -width 35 -height 10 -wrap word -yscrollcommand ".new.note.ys set"
@@ -112,12 +134,18 @@ proc new {} {
 
 	frame .new.btns
 	grid [ttk::button .new.btns.svwk -text "Save" -command {swout}]\
-	[ttk::button .new.btns.close -text "Close" -command {destroy .new}]
+	[ttk::button .new.btns.close -text "Close" -command {
+		destroy .new
+		frame .img
+		grid [ttk::label .img.icon -image tclrunlog]
+		pack .img -in . -side bottom -fill both
+	}]
 
 	pack .new -in . -side bottom
 	pack .new.date -in .new -side top -fill x
 	pack .new.dist -in .new -side top -fill x
 	pack .new.time -in .new -side top -fill x
+	pack .new.calc -in .new -side top -fill x
 	pack .new.note -in .new -side top -fill x
 	pack .new.btns -in .new -side top -fill x
 }
@@ -181,12 +209,22 @@ proc setbrowser {} {
 	}
 }
 
+proc newcalc {} {
+	set seconds [ string trimleft $::sex 0 ]
+	set hours [ string trimleft $::hrs 0 ]
+	set minutes [ string trimleft $::mins 0 ]
+	set tsex [expr { ($hours*3600)+($minutes*60)+$seconds }]
+	set pacesecs [expr { $tsex / $::distance }]
+	set pacesex [expr {round($pacesecs)}]
+	set ::pace [clock format $pacesex -gmt 1 -format %M:%S]
+	
+
+	set ::cals [expr {0.7568 * $::weight * $::distance}]
+}
 proc swout {} {
 	set ::note [.new.note.t get 1.0 {end -1c}]
-	set tsex [expr { ($::hrs*3600)+($::mins*60)+$::sex }]
-
 	sqlite3 db runlog.db
-	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::weight,$::note)}
+	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::weight,$::note,$::pace,$::cals)}
 }
 
 proc about {} {
