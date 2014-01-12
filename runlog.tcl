@@ -210,9 +210,16 @@ proc setbrowser {} {
 }
 
 proc newcalc {} {
+
+	if { $::sex != "00" } {
 	set seconds [ string trimleft $::sex 0 ]
+	} else { set seconds $::sex }
+	if { $::hrs != "00" } {
 	set hours [ string trimleft $::hrs 0 ]
+	} else { set hours $::hrs }
+	if { $::mins != "00" } {
 	set minutes [ string trimleft $::mins 0 ]
+	} else { set minutes $::mins }
 	set tsex [expr { ($hours*3600)+($minutes*60)+$seconds }]
 	set pacesecs [expr { $tsex / $::distance }]
 	set pacesex [expr {round($pacesecs)}]
@@ -237,7 +244,7 @@ proc about {} {
 }
 
 proc wiki {} {
-	eval exec "\"$::browser\" http://tonyb.us/tclrunlog"
+	eval exec "$::browser http://tonyb.us/tclrunlog &"
 }
 
 # This program was written by tony baldwin - http://wiki.tonybaldwin.info 
