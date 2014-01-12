@@ -109,7 +109,8 @@ proc calc2 {} {
 	}
 	set sexpmi [expr {($::2mins * 60) + $::2secs}]
 	set totsex [expr { $sexpmi * $::dis2 }]
-	set totime [clock format $totsex -gmt 1 -format %H:%M:%S]
+	set tsex [expr {round($totsex)}]
+	set totime [clock format $tsex -gmt 1 -format %H:%M:%S]
 
 	toplevel .calc2
 	grid [ttk::label .calc2.l -text "Total time: $totime"]\
@@ -119,6 +120,7 @@ proc calc2 {} {
 
 proc calcal {} {
 	set cals [expr {0.7568 * $::weight * $::dis3}]
+	set cals [expr {round($cals)}]
 
 	toplevel .ccalc
 	grid [ttk::label .ccalc.cal -text "Calories burned (approx.): $cals"]\
