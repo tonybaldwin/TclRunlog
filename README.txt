@@ -4,8 +4,8 @@ a runner's workout logging tool
 in tcl/tk with sqlite db
 by Tony Baldwin
 
-This is barely started (as of 20140107, because
-I just started building it today).
+With runner's pace calculator to calculate pace, calories burned,
+and other relevant figures.
 
 TclRunlog requires:
 Tcl/Tk 

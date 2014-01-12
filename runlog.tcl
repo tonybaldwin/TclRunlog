@@ -26,6 +26,7 @@ set os $tcl_platform(os)
 bind . <Control-n> {new}
 bind . <Escape> {exit}
 bind . <F8> {preferences}
+bind . <F4> {eval exec wish pacecalc.tcl}
 
 image  create  photo  tclrunlog -format GIF -file  tclrunlog.gif
 image  create  photo  tricon -format GIF -file  tricon.gif
@@ -71,6 +72,9 @@ menu .menu.file.menu -tearoff 0
 .menu.file.menu add command -label "Open Workout" -command {openwk} -accelerator Ctrl-o
 .menu.file.menu add command -label "Monthly Report" -command {month} -accelerator Ctrl-m
 .menu.file.menu add command -label "Yearly Report" -command {year} -accelerator Ctrl-y
+.menu.file.menu add command -label "Run Calculator" -command {
+	eval exec wish pacecalc.tcl &
+} -accelerator <F4>
 .menu.file.menu add command -label "Preferences" -command {preferences} -accelerator <F8>
 .menu.file.menu add command -label "Quit" -command {exit} -accelerator Esc
 
