@@ -17,6 +17,12 @@ global cals
 global dunit
 global pace
 global cals
+global month
+global year
+global ymo
+
+set year [clock format [clock seconds] -format %Y]
+set month [clock format [clock seconds] -format %m]
 
 set cals {}
 set pace {}
@@ -27,6 +33,7 @@ bind . <Control-n> {new}
 bind . <Escape> {exit}
 bind . <F8> {preferences}
 bind . <F4> {eval exec wish pacecalc.tcl}
+bind . <Control-m> {month}
 
 image  create  photo  tclrunlog -format GIF -file  tclrunlog.gif
 image  create  photo  tricon -format GIF -file  tricon.gif
@@ -157,9 +164,6 @@ proc new {} {
 proc openwk {} {
 }
 
-proc month {} {
-}
-
 proc year {} {
 }
 
@@ -236,6 +240,50 @@ proc swout {} {
 	set ::note [.new.note.t get 1.0 {end -1c}]
 	sqlite3 db runlog.db
 	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::weight,$::note,$::pace,$::cals)}
+}
+
+proc month {} {
+	toplevel .month
+	wm title .month "Monthly Reports"
+	grid [ttk::label .month.lbl -text "Choose month and year: "]\
+	[ttk::combobox .month.cmo -width 5 -value [list "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"] -state readonly -textvar ::month]\
+	[ttk::combobox .month.cyr -width 5 -value [list "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023" "2024" "2025" "2026" "2027" "2028" "2029" "2030" "2031" "2032" "2033" "2034"] -state readonly -textvar ::year]\
+	[ttk::button .month.go -text "get report" -command {moreport}]\
+	[ttk::button .month.q -text "close" -command {destroy .month}]
+}
+
+proc moreport {} {
+	set ymo "$::year-$::month%"
+	sqlite3 db runlog.db
+	set totruns [ db eval {select count(*) from workouts where date like $ymo}]
+	set totdist [ db eval {select sum(distance) from workouts where date like $ymo}]
+	set tothrs [ db eval {select sum(hrs) from workouts where date like $ymo}]
+	set totmins [ db eval {select sum(mins) from workouts where date like $ymo}]
+	set totsecs [ db eval {select sum(secs) from workouts where date like $ymo}]
+	set totcals [ db eval {select sum(cals) from workouts where date like $ymo}]
+	
+	set mototsecs [expr {($tothrs*3600)+($totmins*60)+$totsecs}]
+	set mopacesecs [expr { $mototsecs / $totdist }]
+	set mpsx [expr {round($mopacesecs)}]
+	set avepace [clock format $mpsx -gmt 1 -format %M:%S]
+	set totime [clock format $mototsecs -gmt 1 -format %H:%M:%S]
+	set avedist [expr {$totdist/$totruns}]
+	set mocals [expr {round($totcals)}]
+
+
+	
+	toplevel .moreport 
+	wm title .moreport "Monthly Report $::month/$::year"
+	set thismoreport "Monthly Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist\nTotal calories burned: $mocals\nAverage distance: $avedist\nAverage pace: $avepace"
+	frame .moreport.t
+	text .moreport.t.rpt -width 40 -height 10
+	.moreport.t.rpt insert end $thismoreport
+	pack .moreport.t.rpt -in .moreport.t
+	frame .moreport.b
+	grid [ttk::button .moreport.b.s -text "Save" -command {savemonth}]\
+       	[ttk::button .moreport.q -text "Okay" -command {destroy .moreport}]
+	pack .moreport.t -in .moreport -side top
+	pack .moreport.b -in .moreport -side top
 }
 
 proc about {} {
