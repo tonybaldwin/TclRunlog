@@ -286,6 +286,51 @@ proc moreport {} {
 	pack .moreport.b -in .moreport -side top
 }
 
+
+proc year {} {
+	toplevel .year
+	wm title .year "Yearly Reports"
+	grid [ttk::label .year.lbl -text "Choose year: "]\
+	[ttk::combobox .year.cyr -width 5 -value [list "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023" "2024" "2025" "2026" "2027" "2028" "2029" "2030" "2031" "2032" "2033" "2034"] -state readonly -textvar ::year]\
+	[ttk::button .year.go -text "get report" -command {yrreport}]\
+	[ttk::button .year.q -text "close" -command {destroy .year}]
+}
+
+proc yrreport {} {
+	set yr "$::year%"
+	sqlite3 db runlog.db
+	set totruns [ db eval {select count(*) from workouts where date like $yr}]
+	set totdist [ db eval {select sum(distance) from workouts where date like $yr}]
+	set tothrs [ db eval {select sum(hrs) from workouts where date like $yr}]
+	set totmins [ db eval {select sum(mins) from workouts where date like $yr}]
+	set totsecs [ db eval {select sum(secs) from workouts where date like $yr}]
+	set totcals [ db eval {select sum(cals) from workouts where date like $yr}]
+	
+	set mototsecs [expr {($tothrs*3600)+($totmins*60)+$totsecs}]
+	set mopacesecs [expr { $mototsecs / $totdist }]
+	set mpsx [expr {round($mopacesecs)}]
+	set avepace [clock format $mpsx -gmt 1 -format %M:%S]
+	set totime [clock format $mototsecs -gmt 1 -format %H:%M:%S]
+	set avedist [expr {$totdist/$totruns}]
+	set mocals [expr {round($totcals)}]
+
+
+	
+	toplevel .yreport 
+	wm title .yreport "Yearly Report $::year"
+	set thisyreport "Yearly Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist\nTotal calories burned: $mocals\nAverage distance: $avedist\nAverage pace: $avepace"
+	frame .yreport.t
+	text .yreport.t.rpt -width 40 -height 10
+	.yreport.t.rpt insert end $thisyreport
+	pack .yreport.t.rpt -in .yreport.t
+	frame .yreport.b
+	grid [ttk::button .yreport.b.s -text "Save" -command {savemonth}]\
+       	[ttk::button .yreport.q -text "Okay" -command {destroy .yreport}]
+	pack .yreport.t -in .yreport -side top
+	pack .yreport.b -in .yreport -side top
+}
+
+
 proc about {} {
 	toplevel .about 
 	wm title .about "About Tcl Runlog"

@@ -28,14 +28,12 @@ Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
 
 UPDATE 
 Sat Jan 18 00:29:54 EST 2014
-TclRunlog now creates monthly reports.
+TclRunlog now creates monthly and yearly reports.
 It doesn't save them, yet.
-Yearly reports will come probably before the weekend is out,
-as well as saving both, export to plain txt or other formats (pdf?),
-and posting to Friendica or other networks.
 
 TODO: 
-Well, the above completion of monthly/yearly report functions, 
+Save year/month reports to db, export to plain text or other formats,
+posting of workouts, reports, to friendica and other networks
 plus:
 Open and edit existing workout entries - VERY IMPORTANT
 Searching entries.
