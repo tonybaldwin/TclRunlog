@@ -236,11 +236,19 @@ proc newcalc {} {
 	
 
 	set ::cals [expr {0.7568 * $::weight * $::distance}]
+	set ::cals [expr {round($::cals)}]
 }
 proc swout {} {
 	set ::note [.new.note.t get 1.0 {end -1c}]
 	sqlite3 db runlog.db
 	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::weight,$::note,$::pace,$::cals)}
+	set wchange [expr {$::weight - $::oweight}]
+	toplevel .wout
+	wm title .wout "Workout $::date"
+	text .wout.t -width 40 -height 10
+	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
+	.wout.t insert end $wtxt
+	pack .wout.t -in .wout
 }
 
 proc month {} {
