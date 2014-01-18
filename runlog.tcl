@@ -34,6 +34,7 @@ bind . <Escape> {exit}
 bind . <F8> {preferences}
 bind . <F4> {eval exec wish pacecalc.tcl}
 bind . <Control-m> {month}
+bind . <Control-y> {year}
 
 image  create  photo  tclrunlog -format GIF -file  tclrunlog.gif
 image  create  photo  tricon -format GIF -file  tricon.gif
