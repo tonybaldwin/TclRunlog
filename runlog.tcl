@@ -241,7 +241,7 @@ proc newcalc {} {
 proc swout {} {
 	set ::note [.new.note.t get 1.0 {end -1c}]
 	sqlite3 db runlog.db
-	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::weight,$::note,$::pace,$::cals)}
+	db eval {insert into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::pace,$::weight,$::cals,$::note)}
 	set wchange [expr {$::weight - $::oweight}]
 	toplevel .wout
 	wm title .wout "Workout $::date"
