@@ -165,9 +165,6 @@ proc new {} {
 proc openwk {} {
 }
 
-proc year {} {
-}
-
 proc preferences {} {
 	toplevel .prefs
 	grid [ttk::label .prefs.ml -text "Units: "]\
