@@ -280,7 +280,8 @@ proc moreport {} {
 	set mpsx [expr {round($mopacesecs)}]
 	set avepace [clock format $mpsx -gmt 1 -format %M:%S]
 	set totime [clock format $mototsecs -gmt 1 -format %H:%M:%S]
-	set avedist [expr {$totdist/$totruns}]
+	set adist [expr {$totdist/$totruns}]
+	set avedist [format "%.2f" $adist]
 	set mocals [expr {round($totcals)}]
 
 
