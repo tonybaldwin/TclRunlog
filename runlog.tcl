@@ -151,6 +151,12 @@ proc new {} {
 		frame .img
 		grid [ttk::label .img.icon -image tclrunlog]
 		pack .img -in . -side bottom -fill both
+	}]\
+	[ttk::button .new.btns.clr -text "Clear" -command {
+		set wkvars [list distance date weight hrs mins sex pace cals note]	
+		foreach var $::wkvars {global $var}
+		foreach var $::wkvars {set $var " "}
+		.new.note.t delete 1.0 end
 	}]
 
 	pack .new -in . -side bottom
@@ -163,9 +169,6 @@ proc new {} {
 }
 
 proc openwk {} {
-}
-
-proc year {} {
 }
 
 proc preferences {} {
@@ -245,6 +248,7 @@ proc swout {} {
 	set wchange [expr {$::weight - $::oweight}]
 	toplevel .wout
 	wm title .wout "Workout $::date"
+	bind .wout <Escape> {destroy .wout}
 	text .wout.t -width 40 -height 10
 	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
 	.wout.t insert end $wtxt
