@@ -30,6 +30,10 @@ UPDATE
 Sat Jan 18 00:29:54 EST 2014
 TclRunlog now creates monthly and yearly reports.
 It doesn't save them, yet.
+Tue Jan 28 11:30:14 EST 2014
+View all entries for a given month
+Also, yesterday, properly rounded ave distance, total calories
+in monthly/yearly reports.
 
 TODO: 
 Save year/month reports to db, export to plain text or other formats,
@@ -37,7 +41,6 @@ posting of workouts, reports, to friendica and other networks
 plus:
 Open and edit existing workout entries - VERY IMPORTANT
 Searching entries.
-Then from there, who knows...weekly reports?
 Comparison with $thisdate - 1 year?
 The possibilities are endless.
 
