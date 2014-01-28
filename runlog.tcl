@@ -262,8 +262,26 @@ proc month {} {
 	[ttk::combobox .month.cmo -width 5 -value [list "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"] -state readonly -textvar ::month]\
 	[ttk::combobox .month.cyr -width 5 -value [list "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023" "2024" "2025" "2026" "2027" "2028" "2029" "2030" "2031" "2032" "2033" "2034"] -state readonly -textvar ::year]\
 	[ttk::button .month.go -text "get report" -command {moreport}]\
+	[ttk::button .month.l -text "view workouts" -command {mowout}]\
 	[ttk::button .month.q -text "close" -command {destroy .month}]
 }
+
+proc mowout {} {
+	toplevel .w
+        wm title .w "runlog entries for 2014-01"
+
+	set ymo "$::year-$::month%"
+	# bind .w <Escape> {destroy .w}
+	text .w.t -wrap word -yscrollcommand ".w.ys set"
+        bind .w.t <KeyPress> break
+	scrollbar .w.ys -command  ".w.t yview"
+        set stuff [db eval {select * from workouts where date like $ymo} {
+        .w.t insert end "Date: $date, Distance: $distance, Pace: $pace\nNotes: $notes\n------------\n"
+	pack .w.t -in .w -side left -fill both
+	pack .w.ys -in .w -side right -fill y
+	}]
+}
+
 
 proc moreport {} {
 	set ymo "$::year-$::month%"
@@ -287,6 +305,7 @@ proc moreport {} {
 
 	
 	toplevel .moreport 
+	bind .moreport <Escape> {destroy .moreport}
 	wm title .moreport "Monthly Report $::month/$::year"
 	set thismoreport "Monthly Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist\nTotal calories burned: $mocals\nAverage distance: $avedist\nAverage pace: $avepace"
 	frame .moreport.t
