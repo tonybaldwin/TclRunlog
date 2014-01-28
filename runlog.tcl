@@ -268,7 +268,7 @@ proc month {} {
 
 proc mowout {} {
 	toplevel .w
-        wm title .w "runlog entries for 2014-01"
+        wm title .w "runlog entries for $::month/$::year"
 
 	set ymo "$::year-$::month%"
 	# bind .w <Escape> {destroy .w}
@@ -276,7 +276,7 @@ proc mowout {} {
         bind .w.t <KeyPress> break
 	scrollbar .w.ys -command  ".w.t yview"
         set stuff [db eval {select * from workouts where date like $ymo} {
-        .w.t insert end "Date: $date, Distance: $distance, Pace: $pace\nNotes: $notes\n------------\n"
+        .w.t insert end "Date: $date, Distance: $distance, Time: $hrs:$mins:$secs, Cals: $cals Pace: $pace\nNotes: $notes\n------------\n"
 	pack .w.t -in .w -side left -fill both
 	pack .w.ys -in .w -side right -fill y
 	}]
