@@ -317,8 +317,7 @@ proc moreport {} {
 	.moreport.t.rpt insert end $thismoreport
 	pack .moreport.t.rpt -in .moreport.t
 	frame .moreport.b
-	grid [ttk::button .moreport.b.s -text "Save" -command {savemonth}]\
-       	[ttk::button .moreport.q -text "Okay" -command {destroy .moreport}]
+	grid [ttk::button .moreport.b.q -text "Okay" -command {destroy .moreport}]
 	pack .moreport.t -in .moreport -side top
 	pack .moreport.b -in .moreport -side top
 }
@@ -465,8 +464,7 @@ proc yrreport {} {
 	.yreport.t.rpt insert end $thisyreport
 	pack .yreport.t.rpt -in .yreport.t
 	frame .yreport.b
-	grid [ttk::button .yreport.b.s -text "Save" -command {savemonth}]\
-       	[ttk::button .yreport.q -text "Okay" -command {destroy .yreport}]
+	grid [ttk::button .yreport.b.q -text "Okay" -command {destroy .yreport}]
 	pack .yreport.t -in .yreport -side top
 	pack .yreport.b -in .yreport -side top
 }
