@@ -17,12 +17,16 @@ global cals
 global dunit
 global pace
 global cals
+global day
 global month
 global year
 global ymo
+global mydate
 
 set year [clock format [clock seconds] -format %Y]
 set month [clock format [clock seconds] -format %m]
+set day [clock format [clock seconds] -format %d]
+set mydate "$::year-$::month-$::day"
 
 set cals {}
 set pace {}
@@ -269,14 +273,14 @@ proc month {} {
 proc mowout {} {
 	toplevel .w
         wm title .w "runlog entries for $::month/$::year"
-
+	destroy .month
 	set ymo "$::year-$::month%"
 	# bind .w <Escape> {destroy .w}
-	text .w.t -wrap word -yscrollcommand ".w.ys set"
+	text .w.t -width 80 -wrap word -yscrollcommand ".w.ys set"
         bind .w.t <KeyPress> break
 	scrollbar .w.ys -command  ".w.t yview"
         set stuff [db eval {select * from workouts where date like $ymo} {
-        .w.t insert end "Date: $date, Distance: $distance, Time: $hrs:$mins:$secs, Cals: $cals Pace: $pace\nNotes: $notes\n------------\n"
+        .w.t insert end "DATE: $date\nDISTANCE: $distance $::dunit, TIME: $hrs:$mins:$secs, CALORIES: $cals, PACE: $pace min/$::dunit\nNOTES:\n$notes\n-------------------------------------------------------------------\n"
 	pack .w.t -in .w -side left -fill both
 	pack .w.ys -in .w -side right -fill y
 	}]
@@ -307,7 +311,7 @@ proc moreport {} {
 	toplevel .moreport 
 	bind .moreport <Escape> {destroy .moreport}
 	wm title .moreport "Monthly Report $::month/$::year"
-	set thismoreport "Monthly Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist\nTotal calories burned: $mocals\nAverage distance: $avedist\nAverage pace: $avepace"
+	set thismoreport "Monthly Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit"
 	frame .moreport.t
 	text .moreport.t.rpt -width 40 -height 10
 	.moreport.t.rpt insert end $thismoreport
@@ -319,6 +323,109 @@ proc moreport {} {
 	pack .moreport.b -in .moreport -side top
 }
 
+proc openwk {} {
+	toplevel .opwk1
+	wm title .opwk1 "Open Workout"
+	grid [ttk::label .opwk1.lbl -text "Choose year/month/day"]\
+	[ttk::combobox .opwk1.cyr -width 5 -value [list "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023" "2024" "2025" "2026" "2027" "2028" "2029" "2030" "2031" "2032" "2033" "2034"] -state readonly -textvar ::year]\
+	[ttk::combobox .opwk1.cmo -width 5 -value [list "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"] -state readonly -textvar ::month]\
+	[ttk::combobox .opwk1.cdy -width 5 -value [list "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "23" "24" "25" "26" "27" "28" "29" "30" "31"] -state readonly -textvar ::day]\
+	[ttk::button .opwk1.go -text "open" -command {
+	destroy .opwk1
+	set ::mydate "$::year-$::month-$::day%"
+	sqlite3 db runlog.db
+	set date [ db eval {select date from workouts where date like $::mydate}]
+	set distance [ db eval {select distance from workouts where date like $::mydate}]
+	set weight [ db eval {select weight from workouts where date like $::mydate}]
+	set hrs [ db eval {select hrs from workouts where date like $::mydate}]
+	set mins [ db eval {select mins from workouts where date like $::mydate}]
+	set sex [ db eval {select secs from workouts where date like $::mydate}]
+	set cals [ db eval {select cals from workouts where date like $::mydate}]
+	set pace [ db eval {select pace from workouts where date like $::mydate}]
+	set note [ db eval {select notes from workouts where date like $::mydate}]
+	destroy .img
+	frame .edwk
+	frame .edwk.date
+
+	grid [ttk::label .edwk.date.ldate -text "Date: "]\
+	[ttk::entry .edwk.date.edate -textvar date]\
+	[ttk::button .edwk.date.cdate -text "Current Date" -command {
+	set date [clock format [clock seconds] -format "%Y-%m-%d %H:%M:%S"]
+	}]
+
+	frame .edwk.dist
+	grid [ttk::label .edwk.dist.ldist -text "Distance: "]\
+	[ttk::entry .edwk.dist.edist -width 5 -textvar distance]\
+	[ttk::label .edwk.dist.lw -text "Weight: "]\
+	[ttk::entry .edwk.dist.ew -width 5 -textvar weight]
+
+	grid [ttk::label .edwk.dist.ltime -text "Time: "]
+
+	frame .edwk.time
+	grid [ttk::label .edwk.time.lhrs -text "hours: "]\
+	[ttk::entry .edwk.time.ehrs -width 5 -textvar hrs]\
+	[ttk::label .edwk.time.lmins -text "minutes: "]\
+	[ttk::entry .edwk.time.emins -width 5 -textvar mins]\
+	[ttk::label .edwk.time.lsex -text "seconds: "]\
+	[ttk::entry .edwk.time.esex -width 5 -textvar sex]
+
+	frame .edwk.calc
+	grid [ttk::button .edwk.calc.calc -text "ReCalculate" -command {newcalc}]
+	grid [ttk::label .edwk.calc.pc -text "Pace: (min/$::dunit): "]\
+	[ttk::entry .edwk.calc.pace -width 5 -textvar pace]
+	grid [ttk::label .edwk.calc.clr -text "Calories: "]\
+	[ttk::entry .edwk.calc.cals -width 5 -textvar cals]
+
+	grid [ttk::label .edwk.calc.note -text "Notes: "]
+
+	frame .edwk.note
+	text .edwk.note.t -width 35 -height 10 -wrap word -yscrollcommand ".edwk.note.ys set"
+	scrollbar .edwk.note.ys -command ".edwk.note.t yview"
+	.edwk.note.t insert end $note
+	pack .edwk.note.t -in .edwk.note -side left -fill both
+	pack .edwk.note.ys -in .edwk.note -side left -fill y
+
+	frame .edwk.btns
+	grid [ttk::button .edwk.btns.svwk -text "Save" -command {ewout}]\
+	[ttk::button .edwk.btns.close -text "Close" -command {
+		destroy .edwk
+		frame .img
+		grid [ttk::label .img.icon -image tclrunlog]
+		pack .img -in . -side bottom -fill both
+	}]\
+	[ttk::button .edwk.btns.clr -text "Clear" -command {
+		set wkvars [list distance date weight hrs mins sex pace cals note]	
+		foreach var $::wkvars {global $var}
+		foreach var $::wkvars {set $var " "}
+		.edwk.note.t delete 1.0 end
+	}]
+
+	pack .edwk -in . -side bottom
+	pack .edwk.date -in .edwk -side top -fill x
+	pack .edwk.dist -in .edwk -side top -fill x
+	pack .edwk.time -in .edwk -side top -fill x
+	pack .edwk.calc -in .edwk -side top -fill x
+	pack .edwk.note -in .edwk -side top -fill x
+	pack .edwk.btns -in .edwk -side top -fill x
+}]\
+	[ttk::button .opwk1.q -text "close" -command {destroy .opwk1}]
+}
+
+
+proc ewout {} {
+	set ::note [.edwk.note.t get 1.0 {end -1c}]
+	sqlite3 db runlog.db
+	db eval {delete from workouts where date like $::mydate}
+	db eval {replace into workouts values($::date,$::distance,$::hrs,$::mins,$::sex,$::pace,$::weight,$::cals,$::note)}
+	set wchange [expr {$::weight - $::oweight}]
+	toplevel .wout
+	wm title .wout "Workout $::date"
+	bind .wout <Escape> {destroy .wout}
+	text .wout.t -width 40 -height 10
+	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
+	.wout.t insert end $wtxt
+	pack .wout.t -in .wout
+}
 
 proc year {} {
 	toplevel .year
@@ -352,7 +459,7 @@ proc yrreport {} {
 	
 	toplevel .yreport 
 	wm title .yreport "Yearly Report $::year"
-	set thisyreport "Yearly Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist\nTotal calories burned: $mocals\nAverage distance: $avedist\nAverage pace: $avepace"
+	set thisyreport "Yearly Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit"
 	frame .yreport.t
 	text .yreport.t.rpt -width 40 -height 10
 	.yreport.t.rpt insert end $thisyreport
