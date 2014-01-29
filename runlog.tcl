@@ -254,7 +254,7 @@ proc swout {} {
 	wm title .wout "Workout $::date"
 	bind .wout <Escape> {destroy .wout}
 	text .wout.t -width 40 -height 10
-	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
+	set wtxt "$::uname's Running Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
 	.wout.t insert end $wtxt
 	pack .wout.t -in .wout
 }
@@ -311,7 +311,7 @@ proc moreport {} {
 	toplevel .moreport 
 	bind .moreport <Escape> {destroy .moreport}
 	wm title .moreport "Monthly Report $::month/$::year"
-	set thismoreport "Monthly Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit"
+	set thismoreport "$::uname's Monthly Run Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\nTclRunlog - http://tonyb.us/runlog"
 	frame .moreport.t
 	text .moreport.t.rpt -width 40 -height 10
 	.moreport.t.rpt insert end $thismoreport
@@ -458,7 +458,7 @@ proc yrreport {} {
 	
 	toplevel .yreport 
 	wm title .yreport "Yearly Report $::year"
-	set thisyreport "Yearly Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit"
+	set thisyreport "$::uname's Yearly Run Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\nTclRunlog - http://tonyb.us/tclrunlog"
 	frame .yreport.t
 	text .yreport.t.rpt -width 40 -height 10
 	.yreport.t.rpt insert end $thisyreport
