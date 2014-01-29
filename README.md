@@ -9,11 +9,9 @@ and other relevant figures.
 
 ![TclRunlog](http://tonybaldwin.info/images/tclrunlog012914003636.jpg)
 
-TclRunlog requires:
-
-Tcl/Tk 
-
-SQLite3 
+### TclRunlog requires:
+* Tcl/Tk 
+* SQLite3 
 
 TclRunlog is cross-platform.
 Win and Mac folks, get tcl from http://www.activestate.com/activetcl
@@ -32,7 +30,7 @@ Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
 
 ## UPDATES
 -----------------------------------------------------------
-Tue Jan 28 21:00:00 EST 2014 - 
+** Tue Jan 28 21:00:00 EST 2014 ** 
 You can now open an existing workout entry and edit it,
 however, you will probably want to delete the {brackets} around
 the date and notes.
@@ -48,24 +46,22 @@ libertree, friendica, redmatrix, wordpress, statusnet, livejournal...
 anything else? Let me know (nope, not doing facebook, tumblr, twitter, or any other
 corporate fascist network).
 
-Sat Jan 18 00:29:54 EST 2014 - 
+** Sat Jan 18 00:29:54 EST 2014 **
 TclRunlog now creates monthly and yearly reports.
 It doesn't save them, yet.
 
-Tue Jan 28 11:30:14 EST 2014 - 
+** Tue Jan 28 11:30:14 EST 2014 ** 
 View all entries for a given month
 Also, yesterday, properly rounded ave distance, total calories
 in monthly/yearly reports.
 
 ### TODO: 
-Save year/month reports to db, export to plain text or other formats,
-posting of workouts, reports, to friendica and other networks;
-plus:
-
-DONE (20140128): Open and edit existing workout entries - VERY IMPORTANT
-Searching entries.
-Comparison with $thisdate - 1 year?
-The possibilities are endless.
+* Save year/month reports to db, export to plain text or other formats,
+* posting of workouts, reports, to friendica and other networks; plus:
+* DONE (20140128): Open and edit existing workout entries 
+* Full text search of entries (setup in db, not in gui).
+* Comparison with $thisdate - 1 year?
+* The possibilities are endless.
 
 ### ACKNOWLEDGMENTS:
 This program would not exist were it not for the kind and 
