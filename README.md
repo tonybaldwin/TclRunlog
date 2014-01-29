@@ -1,4 +1,4 @@
-Tcl Runlog
+# Tcl Runlog
 -------------
 a runner's workout logging tool
 in tcl/tk with sqlite db
@@ -6,6 +6,8 @@ by Tony Baldwin
 
 With runner's pace calculator to calculate pace, calories burned,
 and other relevant figures.
+
+![TclRunlog](http://wiki.tonybaldwin.info/lib/exe/fetch.php?media=hax:tclrunlogwinmonthwkouts201401281144.png)
 
 TclRunlog requires:
 Tcl/Tk 
@@ -26,7 +28,7 @@ Released according to the Gnu Public License v.3 or later.
 
 Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
 
-UPDATES
+## UPDATES
 -----------------------------------------------------------
 Tue Jan 28 21:00:00 EST 2014
 You can now open an existing workout entry and edit it,
@@ -52,7 +54,7 @@ View all entries for a given month
 Also, yesterday, properly rounded ave distance, total calories
 in monthly/yearly reports.
 
-TODO: 
+### TODO: 
 Save year/month reports to db, export to plain text or other formats,
 posting of workouts, reports, to friendica and other networks
 plus:
@@ -61,7 +63,7 @@ Searching entries.
 Comparison with $thisdate - 1 year?
 The possibilities are endless.
 
-ACKNOWLEDGMENTS:
+### ACKNOWLEDGMENTS:
 This program would not exist were it not for the kind and 
 thorough assistance of the tcl/tk community, 
 especially http://wiki.tcl.tk and the
