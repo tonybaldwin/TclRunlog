@@ -456,17 +456,17 @@ proc yrreport {} {
 
 
 	
-	toplevel .yreport 
-	wm title .yreport "Yearly Report $::year"
-	set thisyreport "$::uname's Yearly Run Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/tclrunlog"
-	frame .yreport.t
-	text .yreport.t.rpt -width 40 -height 10
-	.yreport.t.rpt insert end $thisyreport
-	pack .yreport.t.rpt -in .yreport.t
-	frame .yreport.b
-	grid [ttk::button .yreport.b.q -text "Okay" -command {destroy .yreport}]
-	pack .yreport.t -in .yreport -side top
-	pack .yreport.b -in .yreport -side top
+	toplevel .$::year 
+	wm title .$::year "Yearly Report $::year"
+	set thisyear "$::uname's Yearly Run Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/tclrunlog"
+	frame .$::year.t
+	text .$::year.t.rpt -width 40 -height 10
+	.$::year.t.rpt insert end $thisyear
+	pack .$::year.t.rpt -in .$::year.t
+	frame .$::year.b
+	grid [ttk::button .$::year.b.q -text "Okay" -command {destroy .$::year}]
+	pack .$::year.t -in .$::year -side top
+	pack .$::year.b -in .$::year -side top
 }
 
 
