@@ -316,10 +316,7 @@ proc moreport {} {
 	text .$::month.t.rpt -width 40 -height 10
 	.$::month.t.rpt insert end $thismonth
 	pack .$::month.t.rpt -in .$::month.t
-	frame .$::month.b
-	grid [ttk::button .$::month.b.q -text "Okay" -command {destroy .$::month}]
 	pack .$::month.t -in .$::month -side top
-	pack .$::month.b -in .$::month -side top
 }
 
 proc openwk {} {
@@ -463,10 +460,7 @@ proc yrreport {} {
 	text .$::year.t.rpt -width 40 -height 10
 	.$::year.t.rpt insert end $thisyear
 	pack .$::year.t.rpt -in .$::year.t
-	frame .$::year.b
-	grid [ttk::button .$::year.b.q -text "Okay" -command {destroy .$::year}]
 	pack .$::year.t -in .$::year -side top
-	pack .$::year.b -in .$::year -side top
 }
 
 
