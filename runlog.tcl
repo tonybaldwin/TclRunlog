@@ -308,18 +308,18 @@ proc moreport {} {
 
 
 	
-	toplevel .moreport 
-	bind .moreport <Escape> {destroy .moreport}
-	wm title .moreport "Monthly Report $::month/$::year"
-	set thismoreport "$::uname's Monthly Run Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/runlog"
-	frame .moreport.t
-	text .moreport.t.rpt -width 40 -height 10
-	.moreport.t.rpt insert end $thismoreport
-	pack .moreport.t.rpt -in .moreport.t
-	frame .moreport.b
-	grid [ttk::button .moreport.b.q -text "Okay" -command {destroy .moreport}]
-	pack .moreport.t -in .moreport -side top
-	pack .moreport.b -in .moreport -side top
+	toplevel .$::month 
+	bind .$::month <Escape> {destroy .$::month}
+	wm title .$::month "Monthly Report $::month/$::year"
+	set thismonth "$::uname's Monthly Run Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/runlog\n$::year-$::month"
+	frame .$::month.t
+	text .$::month.t.rpt -width 40 -height 10
+	.$::month.t.rpt insert end $thismonth
+	pack .$::month.t.rpt -in .$::month.t
+	frame .$::month.b
+	grid [ttk::button .$::month.b.q -text "Okay" -command {destroy .$::month}]
+	pack .$::month.t -in .$::month -side top
+	pack .$::month.b -in .$::month -side top
 }
 
 proc openwk {} {
