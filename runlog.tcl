@@ -305,18 +305,20 @@ proc moreport {} {
 	set adist [expr {$totdist/$totruns}]
 	set avedist [format "%.2f" $adist]
 	set mocals [expr {round($totcals)}]
+	set totdist [format "%.2f" $totdist]
 
 
 	
-	toplevel .$::month 
-	bind .$::month <Escape> {destroy .$::month}
-	wm title .$::month "Monthly Report $::month/$::year"
-	set thismonth "$::uname's Monthly Run Report for $::month/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/runlog\n$::year-$::month"
-	frame .$::month.t
-	text .$::month.t.rpt -width 40 -height 10
-	.$::month.t.rpt insert end $thismonth
-	pack .$::month.t.rpt -in .$::month.t
-	pack .$::month.t -in .$::month -side top
+	set thismo $::month	
+	toplevel .$thismo 
+	# bind .$thismo <Escape> {destroy .$thismo}
+	wm title .$thismo "Monthly Report $thismo/$::year"
+	set thismonth "$::uname's Monthly Run Report for $thismo/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/runlog\n"
+	frame .$thismo.t
+	text .$thismo.t.rpt -width 40 -height 10
+	.$thismo.t.rpt insert end $thismonth
+	pack .$thismo.t.rpt -in .$thismo.t
+	pack .$thismo.t -in .$thismo -side top
 }
 
 proc openwk {} {
