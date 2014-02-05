@@ -313,7 +313,7 @@ proc moreport {} {
 	toplevel .$thismo 
 	# bind .$thismo <Escape> {destroy .$thismo}
 	wm title .$thismo "Monthly Report $thismo/$::year"
-	set thismonth "$::uname's Monthly Run Report for $thismo/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/runlog\n"
+	set thismonth "$::uname's Monthly Run Report for $thismo/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/tclrunlog\n"
 	frame .$thismo.t
 	text .$thismo.t.rpt -width 40 -height 10
 	.$thismo.t.rpt insert end $thismonth
