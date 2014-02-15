@@ -6,8 +6,15 @@
 package require Tk
 package require Ttk
 package require sqlite3
+package require http
+package require tls
+package require base64
 
 global uname
+global rname
+global rpass
+global rchan
+global rurl
 global units
 global oweight
 global os
@@ -64,6 +71,10 @@ set uname [ db eval {select value from config where var="name"}]
 set units [ db eval {select value from config where var="units"}]
 set oweight [ db eval {select value from config where var="oweight"}]
 set browser [ db eval {select value from config where var="browser"}]
+set rname [ db eval {select value from config where var="rname"}]
+set rpass [ db  eval {select value from config where var="rpass"}]
+set rurl [ db eval {select value from config where var="rurl"}]
+set rchan [ db eval {select value from config where var="rchan"}]
 
 if { $units == "English" } {
 	set dunit "mi"
@@ -185,6 +196,15 @@ proc preferences {} {
 	[ttk::entry .prefs.eow -width 15 -textvar oweight]
 	grid [ttk::button .prefs.brzr -text "Browser:" -command {setbrowser}]\
 	[ttk::entry .prefs.browz -width 15 -textvar browser]
+	grid [ttk::label .prefs.red -text "RedMatrix Preferences: "]
+	grid [ttk::label .prefs.rn -text "Username (e-mail):  "]\
+	[ttk::entry .prefs.rname -textvar rname]
+	grid [ttk::label .prefs.rp -text "Password: "]\
+	[ttk::entry .prefs.rpass  -show * -textvar rpass]
+	grid [ttk::label .prefs.ru -text "Site URL: "]\
+	[ttk::entry .prefs.rurl -textvar rurl]
+	grid [ttk::label .prefs.rc -text "Channel: "]\
+	[ttk::entry .prefs.rchan -textvar rchan]
 	grid [ttk::button .prefs.save -text "Save" -command {saveprefs}]\
 	[ttk::button .prefs.cancel -text "Close" -command {destroy .prefs}]
 }
@@ -209,6 +229,15 @@ proc saveprefs {} {
 	db eval {insert into config values('oweight',$::oweight)}
 	db eval {delete from config where var="browser"}
 	db eval {insert into config values('browser',$::browser)}
+	
+	db eval {delete from config where var="rname"}
+	db eval {insert into config values('rname',$::rname)}
+	db eval {delete from config where var="rpass"}
+	db eval {insert into config values('rpass',$::rpass)}
+	db eval {delete from config where var="rurl"}
+	db eval {insert into config values('rurl',$::rurl)}
+	db eval {delete from config where var="rchan"}
+	db eval {insert into config values('rchan',$::rchan)}
 
 }
 
@@ -256,7 +285,18 @@ proc swout {} {
 	text .wout.t -width 50 -height 15
 	set wtxt "$::uname's Running Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
 	.wout.t insert end $wtxt
+	tk::button .wout.rpost -text "Post to Red" -command {
+	set update [.wout.t get 1.0 {end -1c}]
+	set title "$::uname's Runlog"
+	::http::register https 443 ::tls::socket
+	set auth "$::rname:$::rpass"
+	set auth64 [::base64::encode $auth]
+	set myquery [::http::formatQuery "status" "$update" "source" "TclRunlog" "channel" "$::rchan" "title" "$title"]
+	set myauth [list "Authorization" "Basic $auth64"]
+	set token [::http::geturl $::rurl/api/statuses/update.xml -headers $myauth -query $myquery] 
+	}
 	pack .wout.t -in .wout
+	pack .wout.rpost -in .wout
 }
 
 proc month {} {
@@ -308,17 +348,28 @@ proc moreport {} {
 	set totdist [format "%.2f" $totdist]
 
 
-	
 	set thismo $::month	
 	toplevel .$thismo 
 	# bind .$thismo <Escape> {destroy .$thismo}
 	wm title .$thismo "Monthly Report $thismo/$::year"
-	set thismonth "$::uname's Monthly Run Report for $thismo/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/tclrunlog\n"
+	set thismonth "$::uname's Monthly Run Report for $thismo/$::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\n"
 	frame .$thismo.t
 	text .$thismo.t.rpt -width 40 -height 10
 	.$thismo.t.rpt insert end $thismonth
+	tk::button .$thismo.rpost -text "Post to Red" -command {
+	set thismo $::month	
+	set update [.$thismo.t.rpt get 1.0 {end -1c}]
+	set title "$::uname's Runlog"
+	::http::register https 443 ::tls::socket
+	set auth "$::rname:$::rpass"
+	set auth64 [::base64::encode $auth]
+	set myquery [::http::formatQuery "status" "$update" "source" "TclRunlog" "channel" "$::rchan" "title" "$title"]
+	set myauth [list "Authorization" "Basic $auth64"]
+	set token [::http::geturl $::rurl/api/statuses/update.xml -headers $myauth -query $myquery] 
+	}
 	pack .$thismo.t.rpt -in .$thismo.t
 	pack .$thismo.t -in .$thismo -side top
+	pack .$thismo.rpost -in .$thismo -side bottom
 }
 
 proc openwk {} {
@@ -457,12 +508,23 @@ proc yrreport {} {
 	
 	toplevel .$::year 
 	wm title .$::year "Yearly Report $::year"
-	set thisyear "$::uname's Yearly Run Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n\nTclRunlog - http://tonyb.us/tclrunlog"
+	set thisyear "$::uname's Yearly Run Report for $::year\n\nTotal number of workouts: $totruns\nTotal distance: $totdist $::dunit\nTotal calories burned: $mocals\nAverage distance: $avedist $::dunit\nAverage pace: $avepace min/$::dunit\n"
 	frame .$::year.t
 	text .$::year.t.rpt -width 40 -height 10
 	.$::year.t.rpt insert end $thisyear
+	tk::button .$::year.rpost -text "Post to Red" -command {
+	set update [.$::year.t.rpt get 1.0 {end -1c}]
+	set title "$::uname's Runlog"
+	::http::register https 443 ::tls::socket
+	set auth "$::rname:$::rpass"
+	set auth64 [::base64::encode $auth]
+	set myquery [::http::formatQuery "status" "$update" "source" "TclRunlog" "channel" "$::rchan" "title" "$title"]
+	set myauth [list "Authorization" "Basic $auth64"]
+	set token [::http::geturl $::rurl/api/statuses/update.xml -headers $myauth -query $myquery] 
+	}
 	pack .$::year.t.rpt -in .$::year.t
 	pack .$::year.t -in .$::year -side top
+	pack .$::year.rpost -in .$::year -side bottom
 }
 
 
