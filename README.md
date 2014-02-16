@@ -30,6 +30,11 @@ Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
 
 ## UPDATES
 -----------------------------------------------------------
+** Sat Feb 15 22:23:00 EST 2014 **
+
+TclRunlog will now post to a redmatrix channel.
+See author's runlog channel at https://tonybaldwin.info/channel/runlog
+
 ** Tue Jan 28 21:00:00 EST 2014 ** 
 You can now open an existing workout entry and edit it,
 however, you will probably want to delete the {brackets} around
