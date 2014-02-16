@@ -33,9 +33,11 @@ Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
 ** Sat Feb 15 22:23:00 EST 2014 **
 
 TclRunlog will now post to a redmatrix channel.
+
 See author's runlog channel at https://tonybaldwin.info/channel/runlog
 
 ** Tue Jan 28 21:00:00 EST 2014 ** 
+
 You can now open an existing workout entry and edit it,
 however, you will probably want to delete the {brackets} around
 the date and notes.
@@ -52,10 +54,12 @@ anything else? Let me know (nope, not doing facebook, tumblr, twitter, or any ot
 corporate fascist network).
 
 ** Sat Jan 18 00:29:54 EST 2014 **
+
 TclRunlog now creates monthly and yearly reports.
 It doesn't save them, yet.
 
 ** Tue Jan 28 11:30:14 EST 2014 ** 
+
 View all entries for a given month
 Also, yesterday, properly rounded ave distance, total calories
 in monthly/yearly reports.
