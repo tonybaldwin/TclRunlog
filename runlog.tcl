@@ -489,12 +489,13 @@ proc yrreport {} {
 	set yr "$::year%"
 	sqlite3 db runlog.db
 	set totruns [ db eval {select count(*) from workouts where date like $yr}]
-	set totdist [ db eval {select sum(distance) from workouts where date like $yr}]
+	set tdist [ db eval {select sum(distance) from workouts where date like $yr}]
 	set tothrs [ db eval {select sum(hrs) from workouts where date like $yr}]
 	set totmins [ db eval {select sum(mins) from workouts where date like $yr}]
 	set totsecs [ db eval {select sum(secs) from workouts where date like $yr}]
 	set totcals [ db eval {select sum(cals) from workouts where date like $yr}]
 	
+	set totdist [format "%.2f" $tdist]
 	set mototsecs [expr {($tothrs*3600)+($totmins*60)+$totsecs}]
 	set mopacesecs [expr { $mototsecs / $totdist }]
 	set mpsx [expr {round($mopacesecs)}]
