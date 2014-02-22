@@ -7,7 +7,7 @@ by Tony Baldwin
 With runner's pace calculator to calculate pace, calories burned,
 and other relevant figures.
 
-![TclRunlog](http://tonybaldwin.info/images/tclrunlog012914003636.jpg)
+![TclRunlog](http://tonybaldwin.homelinux.net/images/tclrunlog012914003636.jpg)
 
 ### TclRunlog requires:
 * Tcl/Tk 
@@ -36,38 +36,9 @@ TclRunlog will now post to a redmatrix channel.
 
 See author's runlog channel at https://tonybaldwin.info/channel/runlog
 
-** Tue Jan 28 21:00:00 EST 2014 ** 
-
-You can now open an existing workout entry and edit it,
-however, you will probably want to delete the {brackets} around
-the date and notes.
-Also, you have to choose a workout to edit BY THE DATE.
-If you are one of those dedicated masochists who runs twice or more a day,
-this feature will not yet be useful for you...working on it.
-You can view entries a month at a time.
-I will soon be adding text search so you can identify a workout you wish to open
-by content of the notes (route, race, tags you write in the notes then become useful!)
-I will probably have export of any report (month, year, workout) to plain text files
-shortly, and will start building in posting of workouts and reports to 
-libertree, friendica, redmatrix, wordpress, statusnet, livejournal...
-anything else? Let me know (nope, not doing facebook, tumblr, twitter, or any other
-corporate fascist network).
-
-** Sat Jan 18 00:29:54 EST 2014 **
-
-TclRunlog now creates monthly and yearly reports.
-It doesn't save them, yet.
-
-** Tue Jan 28 11:30:14 EST 2014 ** 
-
-View all entries for a given month
-Also, yesterday, properly rounded ave distance, total calories
-in monthly/yearly reports.
-
 ### TODO: 
 * Save year/month reports to db, export to plain text or other formats,
-* posting of workouts, reports, to friendica and other networks; plus:
-* DONE (20140128): Open and edit existing workout entries 
+* posting of workouts, reports, to friendica, wordpress, livejournal, and other networks (possibly); 
 * Full text search of entries (setup in db, not in gui).
 * Comparison with $thisdate - 1 year?
 * The possibilities are endless.
