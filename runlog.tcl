@@ -471,7 +471,7 @@ proc ewout {} {
 	wm title .wout "Workout $::date"
 	bind .wout <Escape> {destroy .wout}
 	text .wout.t -width 40 -height 10
-	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
+	set wtxt "$::uname's Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace min/$::dunit\nCalories: $::cals\n\nNotes:\n$::note"
 	.wout.t insert end $wtxt
 	pack .wout.t -in .wout
 }
