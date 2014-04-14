@@ -283,7 +283,7 @@ proc swout {} {
 	wm title .wout "Workout $::date"
 	bind .wout <Escape> {destroy .wout}
 	text .wout.t -width 50 -height 15
-	set wtxt "$::uname's Running Workout $::date\n\nDistance: $::distance\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace\nCalories: $::cals\n\nNotes:\n$::note"
+	set wtxt "$::uname's Running Workout $::date\n\nDistance: $::distance $::dunit\nTime: $::hrs:$::mins:$::sex\nWeight: $::weight ($wchange)\nPace: $::pace mins/$::dunit\nCalories: $::cals\n\nNotes:\n$::note"
 	.wout.t insert end $wtxt
 	tk::button .wout.rpost -text "Post to Red" -command {
 	set update [.wout.t get 1.0 {end -1c}]
