@@ -7,7 +7,7 @@ by Tony Baldwin
 With runner's pace calculator to calculate pace, calories burned,
 and other relevant figures.
 
-![TclRunlog](http://tonybaldwin.homelinux.net/images/tclrunlog012914003636.jpg)
+![TclRunlog](http://tonybaldwin.me/images/tcltrunlog20150127.jpg)
 
 ### TclRunlog requires:
 * Tcl/Tk 
@@ -26,7 +26,7 @@ I may eventually package this up for win folks in tclkit so you'll just have an 
 
 Released according to the Gnu Public License v.3 or later.
 
-Wiki: http://wiki.tonybaldwin.info/doku.php?id=hax:tclrunlog
+Wiki: http://wiki.tonybaldwin.me/doku.php/hax/tclrunlog
 
 ## UPDATES
 -----------------------------------------------------------
